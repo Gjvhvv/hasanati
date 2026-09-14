@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>حسناتي</title>
 
+<script>
+try{
+if(localStorage.getItem('hasanatiTheme')==='dark'){
+document.documentElement.setAttribute('data-theme','dark');
+}
+}catch(e){}
+</script>
+
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0E3B2E">
 <link rel="icon" href="icons/icon-192.png">
@@ -22,6 +30,24 @@
 --gold2:#EDE0BD;
 --muted:#77694f;
 --line:#ddd0ac;
+--mushaf-bg:#fffdf5;
+--shadow:rgba(0,0,0,.1);
+color-scheme:light;
+}
+
+[data-theme="dark"]{
+--ink:#EDE7D6;
+--paper:#11201A;
+--paper2:#1B2C25;
+--green:#0B2E24;
+--green2:#184739;
+--gold:#CDA355;
+--gold2:#3B331E;
+--muted:#9C8F72;
+--line:#2C3E35;
+--mushaf-bg:#16241E;
+--shadow:rgba(0,0,0,.4);
+color-scheme:dark;
 }
 
 *{
@@ -41,6 +67,7 @@ background:var(--paper);
 color:var(--ink);
 font-family:'Tajawal',sans-serif;
 padding-bottom:70px;
+transition:background .2s,color .2s;
 }
 
 button,input,select{
@@ -149,6 +176,50 @@ border-radius:6px;
 padding:0 15px;
 font-weight:700;
 color:var(--green);
+white-space:nowrap;
+}
+
+.search-wrap.open{
+max-height:170px;
+}
+
+.search-scopes{
+display:flex;
+gap:6px;
+margin-bottom:6px;
+}
+
+.scope-btn{
+flex:1;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.3);
+color:rgba(255,255,255,.75);
+border-radius:6px;
+padding:6px 2px;
+font-size:.78rem;
+font-weight:700;
+cursor:pointer;
+}
+
+.scope-btn.active{
+background:var(--gold);
+border-color:var(--gold);
+color:var(--green);
+}
+
+.hadith-book-select{
+width:100%;
+margin-bottom:6px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.3);
+color:#fff;
+border-radius:6px;
+padding:7px;
+font-size:.85rem;
+}
+
+.hadith-book-select option{
+color:#111;
 }
 
 main{
@@ -307,14 +378,15 @@ text-align:center;
 
 .mushaf-page{
 width:100%;
-min-height:calc(100vh - 145px);
-background:#fffdf5;
+min-height:calc(100dvh - 145px);
+background:var(--mushaf-bg);
 border:2px solid var(--gold);
 border-radius:4px;
-box-shadow:0 2px 10px rgba(0,0,0,.1);
+box-shadow:0 2px 10px var(--shadow);
 padding:25px 15px 35px;
 touch-action:pan-y;
 user-select:none;
+transition:background .2s;
 }
 
 .mushaf-header{
@@ -338,8 +410,8 @@ margin-top:3px;
 
 .mushaf-content{
 font-family:'Amiri Quran',serif;
-font-size:1.48rem;
-line-height:2.35;
+font-size:clamp(1.22rem,5.6vw,1.6rem);
+line-height:2.3;
 text-align:justify;
 direction:rtl;
 }
@@ -519,15 +591,10 @@ font-size:.88rem;
 }
 
 .mushaf-page{
-min-height:calc(100vh - 130px);
+min-height:calc(100dvh - 130px);
 padding:21px 11px 28px;
 border-left:1px solid var(--gold);
 border-right:1px solid var(--gold);
-}
-
-.mushaf-content{
-font-size:1.38rem;
-line-height:2.22;
 }
 
 .marker{
@@ -539,11 +606,6 @@ font-size:.67rem;
 }
 
 @media(max-width:380px){
-
-.mushaf-content{
-font-size:1.28rem;
-line-height:2.12;
-}
 
 .pages-grid{
 grid-template-columns:repeat(3,1fr);
@@ -592,6 +654,19 @@ stroke="currentColor" stroke-width="2">
 </button>
 
 <button
+id="theme-btn"
+class="icon-btn"
+aria-label="تبديل الوضع الداكن">
+
+<svg id="theme-icon" viewBox="0 0 24 24" fill="none"
+stroke="currentColor" stroke-width="2">
+<circle cx="12" cy="12" r="5"/>
+<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+</svg>
+
+</button>
+
+<button
 id="search-btn"
 class="icon-btn"
 aria-label="بحث">
@@ -608,6 +683,31 @@ stroke="currentColor" stroke-width="2">
 </div>
 
 <div class="search-wrap" id="search-wrap">
+
+<div class="search-scopes">
+
+<button class="scope-btn" data-scope="ayahs">
+الآيات
+</button>
+
+<button class="scope-btn" data-scope="surahs">
+السور
+</button>
+
+<button class="scope-btn" data-scope="hadith">
+الأحاديث
+</button>
+
+</div>
+
+<select class="hadith-book-select" id="hadith-book-select" style="display:none">
+<option value="bukhari">صحيح البخاري</option>
+<option value="muslim">صحيح مسلم</option>
+<option value="abudawud">سنن أبي داود</option>
+<option value="tirmidhi">جامع الترمذي</option>
+<option value="nasai">سنن النسائي</option>
+<option value="ibnmajah">سنن ابن ماجه</option>
+</select>
 
 <div class="search-row">
 
@@ -693,15 +793,21 @@ let pageCache={};
 let surahCache={};
 let audioQueue=[];
 let audioIndex=-1;
+let searchScope='ayahs';
+let hadithFullCache={};
 
 const app=document.getElementById('app');
 const appTitle=document.getElementById('app-title');
 const backBtn=document.getElementById('back-btn');
 const bookmarkBtn=document.getElementById('bookmark-btn');
+const themeBtn=document.getElementById('theme-btn');
+const themeIcon=document.getElementById('theme-icon');
 const searchBtn=document.getElementById('search-btn');
 const searchWrap=document.getElementById('search-wrap');
 const searchInput=document.getElementById('search-input');
 const searchGo=document.getElementById('search-go');
+const scopeBtns=document.querySelectorAll('.scope-btn');
+const hadithBookSelect=document.getElementById('hadith-book-select');
 const toast=document.getElementById('toast');
 
 const audio=new Audio();
@@ -817,13 +923,78 @@ toastMsg('تم حفظ السورة ✓');
 };
 
 /* =========================
+   THEME
+========================= */
+
+const moonPath=
+'<path d="M20 14.5A8.5 8.5 0 0110.5 5 '+
+'8.5 8.5 0 1020 14.5z"/>';
+
+const sunPath=
+'<circle cx="12" cy="12" r="5"/>'+
+'<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42'+
+'M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+
+function applyThemeIcon(){
+const dark=document.documentElement.getAttribute('data-theme')==='dark';
+themeIcon.innerHTML=dark?moonPath:sunPath;
+}
+
+applyThemeIcon();
+
+themeBtn.onclick=()=>{
+
+const dark=document.documentElement.getAttribute('data-theme')==='dark';
+
+if(dark){
+document.documentElement.removeAttribute('data-theme');
+try{localStorage.setItem('hasanatiTheme','light');}catch(e){}
+}else{
+document.documentElement.setAttribute('data-theme','dark');
+try{localStorage.setItem('hasanatiTheme','dark');}catch(e){}
+}
+
+applyThemeIcon();
+
+};
+
+/* =========================
    SEARCH
 ========================= */
 
+function scopeLabel(){
+if(searchScope==='surahs')return 'ابحث عن اسم أو رقم سورة...';
+if(searchScope==='hadith')return 'ابحث في نص الحديث...';
+return 'ابحث في القرآن الكريم...';
+}
+
+function setScope(scope){
+searchScope=scope;
+
+scopeBtns.forEach(b=>{
+b.classList.toggle('active',b.dataset.scope===scope);
+});
+
+hadithBookSelect.style.display=
+scope==='hadith'?'block':'none';
+
+searchInput.placeholder=scopeLabel();
+}
+
+scopeBtns.forEach(b=>{
+b.onclick=()=>setScope(b.dataset.scope);
+});
+
 searchBtn.onclick=()=>{
+
 searchWrap.classList.toggle('open');
 
 if(searchWrap.classList.contains('open')){
+
+if(currentTab==='hadith')setScope('hadith');
+else if(currentTab==='surahs')setScope('surahs');
+else setScope('ayahs');
+
 searchInput.focus();
 }
 };
@@ -834,13 +1005,31 @@ searchInput.addEventListener('keydown',e=>{
 if(e.key==='Enter')search();
 });
 
+function normalizeAr(text){
+return String(text||'')
+.replace(/[\u064B-\u0652\u0670\u0640]/g,'')
+.replace(/[إأآا]/g,'ا')
+.replace(/ى/g,'ي')
+.replace(/ة/g,'ه');
+}
+
 async function search(){
 
 const q=searchInput.value.trim();
 
 if(!q)return;
 
-subHeader('نتائج البحث');
+if(searchScope==='surahs')return searchSurahs(q);
+if(searchScope==='hadith')return searchHadith(q);
+return searchAyahs(q);
+
+}
+
+/* ---- search: ayahs ---- */
+
+async function searchAyahs(q){
+
+subHeader('نتائج البحث في الآيات');
 
 app.innerHTML=
 '<div class="state">جاري البحث...</div>';
@@ -923,6 +1112,181 @@ app.innerHTML=
 }
 }
 
+/* ---- search: surahs ---- */
+
+async function searchSurahs(q){
+
+subHeader('نتائج البحث في السور');
+
+app.innerHTML=
+'<div class="state">جاري البحث...</div>';
+
+try{
+
+if(!surahs){
+const r=await fetch(API+'/surah');
+if(!r.ok)throw new Error();
+const j=await r.json();
+surahs=j.data;
+}
+
+const nq=normalizeAr(q);
+const asNum=Number(q);
+
+const matches=surahs.filter(s=>
+normalizeAr(s.name).includes(nq)||
+normalizeAr(s.englishName).includes(nq)||
+(asNum&&s.number===asNum)
+);
+
+if(!matches.length){
+app.innerHTML=
+'<div class="state">لم يتم العثور على نتائج.</div>';
+return;
+}
+
+app.innerHTML=matches.map(s=>`
+
+<div
+class="surah-row"
+data-num="${s.number}">
+
+<div class="number">
+${ar(s.number)}
+</div>
+
+<div class="info">
+
+<div class="name">
+${esc(s.name)}
+</div>
+
+<div class="meta">
+${s.revelationType==='Meccan'?'مكية':'مدنية'}
+· ${ar(s.numberOfAyahs)} آية
+</div>
+
+</div>
+
+<div class="arrow">‹</div>
+
+</div>
+
+`).join('');
+
+app.querySelectorAll('.surah-row')
+.forEach(row=>{
+row.onclick=()=>{
+searchWrap.classList.remove('open');
+const n=Number(row.dataset.num);
+const s=surahs.find(x=>x.number===n);
+subHeader(s?s.name:'السورة');
+renderSurah(n);
+};
+});
+
+}catch(e){
+
+app.innerHTML=
+'<div class="state">تعذر البحث. تأكد من اتصال الإنترنت.</div>';
+
+}
+}
+
+/* ---- search: hadith ---- */
+
+async function searchHadith(q){
+
+const book=hadithBookSelect.value;
+
+subHeader('نتائج البحث في '+(hadithNames[book]||'الأحاديث'));
+
+app.innerHTML=
+'<div class="state">جاري تحميل الكتاب والبحث فيه...<br>'+
+'قد يستغرق ذلك بضع ثوانٍ أول مرة.</div>';
+
+try{
+
+if(!hadithFullCache[book]){
+
+const r=await fetch(
+'https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/ara-'+
+book+'.min.json'
+);
+
+if(!r.ok)throw new Error();
+
+const j=await r.json();
+
+hadithFullCache[book]=j.hadiths||[];
+}
+
+const nq=normalizeAr(q);
+
+const matches=hadithFullCache[book]
+.filter(h=>normalizeAr(h.text).includes(nq))
+.slice(0,50);
+
+if(!matches.length){
+app.innerHTML=
+'<div class="state">لم يتم العثور على نتائج في '+
+esc(hadithNames[book]||'')+'.</div>';
+return;
+}
+
+app.innerHTML=`
+
+<div style="
+color:var(--muted);
+font-size:.85rem;
+margin-bottom:10px">
+
+${ar(matches.length)} نتيجة
+${matches.length>=50?'(أول 50)':''}
+
+</div>
+
+${matches.map(h=>`
+
+<div
+class="search-result"
+data-num="${h.hadithnumber}">
+
+<div class="search-ref">
+${esc(hadithNames[book]||'')}
+— حديث ${ar(h.hadithnumber)}
+</div>
+
+<div class="search-text">
+${esc(
+h.text.length>220?
+h.text.slice(0,220)+'…':
+h.text
+)}
+</div>
+
+</div>
+
+`).join('')}
+`;
+
+app.querySelectorAll('.search-result')
+.forEach(el=>{
+el.onclick=()=>{
+searchWrap.classList.remove('open');
+renderHadith(book,Number(el.dataset.num));
+};
+});
+
+}catch(e){
+
+app.innerHTML=
+'<div class="state">تعذر تحميل الكتاب للبحث فيه.<br>'+
+'تأكد من اتصال الإنترنت وحاول مجددًا.</div>';
+
+}
+}
+
 /* =========================
    HOME
 ========================= */
@@ -975,7 +1339,7 @@ data-tab="surahs">
 
 <button class="tab ${currentTab==='pages'?'active':''}"
 data-tab="pages">
-الصفحات
+القرآن
 </button>
 
 <button class="tab ${currentTab==='hadith'?'active':''}"
