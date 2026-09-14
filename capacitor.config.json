@@ -1,0 +1,8 @@
+{
+  "appId": "com.hasanati.app",
+  "appName": "حسناتي",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  }
+}
